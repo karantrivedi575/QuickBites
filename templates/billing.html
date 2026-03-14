@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billing - QuickBites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5e6cc; /* Light beige background */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50; /* Darker color for header */
+        }
+
+        h2, h3 {
+            color: #3498db; /* Blue for section headers */
+            border-bottom: 2px solid #3498db; /* Underline for section headers */
+            padding-bottom: 10px;
+        }
+
+        .billing-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f9f9f9; /* Slightly darker background for items */
+        }
+
+        button {
+            background-color: #3498db; /* Button background color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px 0; /* Add margin between buttons */
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+
+        #completed-orders-list {
+            display: none;
+        }
+
+        #invoice-detail-section {
+            display: none;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        #invoice-details {
+            /* Styles for individual invoice details */
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Billing Section</h1>
+    </header>
+
+    <!-- Generate New Invoice Section -->
+    <section id="generate-invoice">
+        <h2>Generate New Invoice</h2>
+        <p>Select completed orders to generate invoices:</p>
+        <div id="completed-orders">
+            <!-- Completed orders will be dynamically inserted here -->
+            {% for order in completed_orders %}
+                <div class="billing-item">
+                    <p>Order ID: {{ order.id }} - Total: Rs. {{ order.total_price }}</p>
+                    <button onclick="generateInvoice({{ order.id }})">Generate Invoice</button>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+<!-- Billing History Section -->
+<section id="billing-history">
+    <h2>Billing History</h2>
+    <div id="billing-list">
+        <!-- Billing history dynamically loaded -->
+        {% for invoice in invoices %}
+            <div class="billing-item">
+                <p>Invoice #{{ invoice.id }} - Order #{{ invoice.order_id }} - Rs. {{ invoice.total_price }} - {{ invoice.date_issued.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                <button onclick="viewInvoice({{ invoice.id }}, this)">View Invoice</button>
+                <!-- Div to show invoice details below each button -->
+                <div class="invoice-details" style="display:none;"></div>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+    <!-- External JavaScript file for dynamic behavior -->
+    <script src="{{ url_for('static', filename='js/billing.js') }}"></script>
+</body>
+</html>

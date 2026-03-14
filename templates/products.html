@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #c5a880;  /* Dark beige background */
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .menu-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 items per row */
+            gap: 20px;
+            justify-items: center;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2em;
+            color: #ffffff;
+            margin: 20px 0;
+        }
+
+        .product-card {
+            background-color: #f5e6cc;  /* Light beige background */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative; /* To position the out-of-stock label */
+        }
+
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* New class for out-of-stock items */
+        .out-of-stock {
+            opacity: 0.5;  /* Make the card semi-transparent */
+            pointer-events: none;  /* Disable any interactions */
+        }
+
+        /* Out of Stock Label */
+        .out-of-stock-label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: red;
+            color: white;
+            padding: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .product-price {
+            font-size: 1.2em;
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .quantity-selector input {
+            width: 40px;
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .order-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease; /* Added transition for animation */
+        }
+
+        .order-button:hover {
+            background-color: #2980b9;
+        }
+
+        .order-button:active {
+            transform: scale(0.95); /* Animation on click */
+        }
+
+        .cart-button {
+            padding: 10px 20px;
+            background-color: #e67e22;  /* Orange color for cart button */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 20px auto;
+            display: block;  /* Center the button */
+        }
+
+        .cart-button:hover {
+            background-color: #d35400;
+        }
+
+        @media screen and (max-width: 768px) {
+            .menu-container {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const userRole = "{{ user_role }}"; // Assuming you can render user_role here
+            if (userRole === 'user') {
+                const stockDisplays = document.querySelectorAll('.product-stock');
+                stockDisplays.forEach(stockDisplay => {
+                    stockDisplay.style.display = 'none';
+                });
+            }
+        });
+        
+        function addToCart(productName, productPrice, productId) {
+            // Get the quantity from the input field
+            const quantityInput = document.getElementById(`quantity-${productId}`);
+            const quantity = parseInt(quantityInput.value) || 1; // Default to 1 if input is empty
+
+            // Retrieve cart from local storage or create a new array
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+            // Check if the item already exists in the cart
+            const existingProductIndex = cart.findIndex(item => item.id === productId);
+
+            if (existingProductIndex !== -1) {
+                // If product exists, update the quantity
+                cart[existingProductIndex].quantity += quantity;
+            } else {
+                // Otherwise, add new product
+                cart.push({
+                    id: productId,
+                    name: productName,
+                    price: productPrice,
+                    quantity: quantity
+                });
+            }
+
+            // Save updated cart to local storage
+            localStorage.setItem('cart', JSON.stringify(cart));
+
+            // Update stock display
+            const stockDisplay = document.querySelector(`.product-stock[data-product-id='${productId}']`);
+            const currentStock = parseInt(stockDisplay.textContent.replace('Stock: ', ''));
+            const newStock = currentStock - quantity;
+            stockDisplay.textContent = `Stock: ${newStock}`;
+
+            // Disable quantity input and button if out of stock
+            if (newStock <= 0) {
+                quantityInput.disabled = true;
+                document.querySelector(`button[onclick*='${productId}']`).disabled = true;
+                stockDisplay.parentNode.classList.add('out-of-stock');
+                alert(`${productName} has been added to your cart! This item is now out of stock.`);
+            } else {
+                alert(`${productName} has been added to your cart!`);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            cart.forEach(item => {
+                const stockDisplay = document.querySelector(`.product-stock[data-product-id='${item.id}']`);
+                const currentStock = parseInt(stockDisplay.textContent.replace('Stock: ', ''));
+                const newStock = currentStock - item.quantity;
+                stockDisplay.textContent = `Stock: ${newStock}`;
+
+                // Disable quantity input and button if out of stock
+                if (newStock <= 0) {
+                    document.getElementById(`quantity-${item.id}`).disabled = true;
+                    document.querySelector(`button[onclick*='${item.id}']`).disabled = true;
+                    stockDisplay.parentNode.classList.add('out-of-stock');
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="title">Order</div> <!-- Title at the top -->
+
+    <div class="menu-container">
+        {% for product in products %}
+            <div class="product-card {% if product['stock'] == 0 %}out-of-stock{% endif %}">
+                {% if product['stock'] == 0 %}
+                    <div class="out-of-stock-label">Out of Stock</div>
+                {% endif %}
+                <!-- Product Image -->
+                <img src="{{ product['url'] }}" alt="{{ product['name'] }}" class="product-image">
+            
+                <!-- Product Name -->
+                <div class="product-name">{{ product['name'] }}</div>
+                
+                <!-- Product Description -->
+                <div class="product-description">{{ product['description'] }}</div>
+                
+                <!-- Product Price -->
+                <div class="product-price">Rs. {{ product['price'] }}</div>
+        
+                <!-- Product Stock -->
+                <div class="product-stock" data-product-id="{{ product['id'] }}">Stock: {{ product['stock'] }}</div>
+        
+                <!-- Quantity Selector -->
+                <div class="quantity-selector">
+                    <input type="number" 
+                           value="1" 
+                           min="1" 
+                           max="{{ product['stock'] }}" 
+                           id="quantity-{{ product['id'] }}" 
+                           class="quantity-input" 
+                           {% if product['stock'] == 0 %}disabled{% endif %}>
+                    <span>Qty</span>
+                </div>
+        
+                <!-- Order Button -->
+                <button onclick="addToCart('{{ product['name'] }}', {{ product['price'] }}, {{ product['id'] }})" class="order-button" {% if product['stock'] == 0 %}disabled{% endif %}>Add to Cart</button>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Cart Button -->
+    <button class="cart-button" onclick="window.location.href='{{ url_for('checkout') }}'">Go to Checkout</button>
+
+</body>
+</html>

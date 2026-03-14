@@ -1,0 +1,1 @@
+truncate support_queries;

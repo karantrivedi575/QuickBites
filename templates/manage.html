@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage - QuickBites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            background-color: #d2b48c; /* Tan background */
+            font-family: 'Lora', serif; /* Updated font */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50; /* Darker color for header */
+        }
+
+        section {
+            background-color: #ffffff; /* White background for sections */
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #3498db; /* Blue for section headers */
+            border-bottom: 2px solid #3498db; /* Underline for section headers */
+            padding-bottom: 10px;
+        }
+
+        button {
+            background-color: #3498db; /* Button background color */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px 0; /* Add margin between buttons */
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Darker blue on hover */
+        }
+
+        .product-item, .order-item, .billing-item {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #f9f9f9; /* Slightly darker background for items */
+            transition: background-color 0.3s;
+        }
+
+        .product-item:hover, .order-item:hover, .billing-item:hover {
+            background-color: #eaeaea; /* Change background on hover */
+        }
+
+        .navbar {
+            background-color: #d2b48c; /* Matching tan for navbar */
+        }
+
+        .navbar-brand, .nav-link {
+            color: #ffffff; /* White text on navbar */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Manage Section</h1>
+    </header>
+
+    <!-- Product Management Section -->
+    <section id="manage">
+        <h2>Product Management</h2>
+        <div id="product-list">
+            <h3>Product List</h3>
+            <!-- Product items dynamically loaded from product management page -->
+        </div>
+        <button onclick="location.href='/product_management'">Go to Product Management</button>
+    </section>
+
+    <!-- Order Management Section -->
+    <section id="manage-orders">
+        <h2>Order Management</h2>
+        <div id="order-list">
+            <h3>Order List</h3>
+        </div>
+        <button onclick="location.href='/order_management'">Go to Order Management</button>
+    </section>
+
+    <!-- Billing Section -->
+    <section id="billing-section">
+        <h2>Billing Section</h2>
+        <div id="billing-list">
+            <h3>Bill Generation and Invoices</h3>
+        </div>
+        <button onclick="location.href='/billing'">Go to Billing Section</button>
+    </section>
+
+    <!-- Queries and Suggestions Section -->
+    <section id="queries-section">
+        <h2>Support section</h2>
+        <h3>We value your feedback and suggestions. Please let us know how we can improve!</h3>
+        <button onclick="location.href='/queries'">Go to Support section</button>
+    </section>
+
+</body>
+</html>

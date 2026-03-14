@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - QuickBites</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5dc;
+            font-family: 'Lora', serif;
+        }
+
+        .navbar {
+            background-color: #d2b48c;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #ffffff;
+        }
+
+        .nav-link:hover {
+            color: #ffe4b5;
+        }
+
+        .logout-btn {
+            background-color: #b22222;
+            color: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .specials {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .special-card {
+            background-color: #ffffff;
+            border: 1px solid #d2b48c;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            flex-basis: 30%;
+            transition: transform 0.2s;
+        }
+
+        .special-card:hover {
+            transform: scale(1.05);
+        }
+
+        .promotion {
+            background-color: #ffe4b5;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .offers {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .offer-card {
+            background-color: #ffebcd;
+            border: 1px solid #d2b48c;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            text-align: center;
+            flex-basis: 45%;
+            transition: background-color 0.2s;
+        }
+
+        .offer-card:hover {
+            background-color: #ffe4b5;
+        }
+
+        h3 {
+            margin-top: 40px;
+        }
+        .specials {
+            display: flex;
+            justify-content: space-between; /* Ensures spacing between the cards */
+            gap: 20px; /* Adds a gap between the cards */
+        }
+        
+        .special-card {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f8f8; /* Light background for each card */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for effect */
+            max-width: 300px;
+            margin: 0 auto; /* Centers the card */
+        }
+        
+        .special-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover; /* Ensures images are fully covered */
+        }
+        
+        .special-card h4 {
+            margin-top: 15px;
+            font-size: 1.2em;
+        }
+        
+        .special-card .description {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .special-card .price {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .special-card a {
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">QuickBites</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="home-button" data-toggle="modal" data-target="#welcomeModal">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/products">Products</a>
+                </li>
+                <!-- Show Manage link only if the user is an admin -->
+                {% if role == 'admin' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/manage">Manage</a>
+                </li>
+                {% endif %}
+
+                {% if role == 'user' %}
+                <li class="nav-item">
+                    <a class="nav-link" href="/help">Help</a>
+                </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a class="nav-link logout-btn" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <div class="content">
+        <h2>Welcome to QuickBites!</h2>
+        <p>Your go-to cafe for delightful food and drinks! Check out today’s specials and exciting offers below.</p>
+
+        <!-- Today's Specials Section -->
+<h3>Today's Specials</h3>
+
+<!-- Bar above the products -->
+<div class="bar"></div>
+
+<div class="specials">
+    <div class="special-card">
+        <h4>Spicy Tuna Wrap</h4>
+        <img src="https://gimmedelicious.com/wp-content/uploads/2018/05/Spicy-Tuna-Wraps-6.jpg" alt="Spicy Tuna Wrap" class="img-fluid">
+        <p class="price">Rs. 250</p>
+        <p class="description">Fresh sushi-grade tuna mixed with spicy mayo, crisp lettuce, and avocado, all wrapped in a soft tortilla for a flavorful bite!</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+
+    </div>
+    <div class="special-card">
+        <h4>Mint Lemonade</h4>
+        <img src="https://shorturl.at/ePq4b" alt="Mint Lemonade" class="img-fluid">
+        <p class="price">Rs. 100</p>
+        <p class="description">A refreshing blend of zesty lemons and fragrant mint, served chilled for the perfect thirst-quencher on a hot day!</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+    </div>
+    <div class="special-card">
+        <h4>Chocolate Chip Cookies</h4>
+        <img src="https://shorturl.at/qhkhS" alt="Chocolate Chip Cookies" class="img-fluid">
+        <p class="price">Rs. 150</p>
+        <p class="description">Soft and chewy cookies loaded with rich chocolate chips, perfect for a sweet treat any time of the day!</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+    </div>
+
+    <!-- Divider Design between rows of products -->
+    <div class="divider">
+        <hr>
+        <span>More Specials</span>
+        <hr>
+    </div>
+
+    <!-- New Product Cards -->
+    <div class="special-card">
+        <h4>Avocado Toast</h4>
+        <img src="https://shorturl.at/u4PjH" alt="Avocado Toast" class="img-fluid">
+        <p class="price">Rs. 180</p>
+        <p class="description">Crispy toasted bread topped with fresh avocado, sea salt, and a drizzle of olive oil. A perfect start to your day!</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+    </div>
+    <div class="special-card">
+        <h4>Berry Smoothie</h4>
+        <img src="https://shorturl.at/YQyI8" alt="Berry Smoothie" class="img-fluid">
+        <p class="price">Rs. 120</p>
+        <p class="description">A refreshing smoothie made with a mix of berries, yogurt, and a touch of honey for natural sweetness.</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+    </div>
+    <div class="special-card">
+        <h4>Classic Margherita Pizza</h4>
+        <img src="https://shorturl.at/8j7BZ" alt="Classic Margherita Pizza" class="img-fluid">
+        <p class="price">Rs. 500</p>
+        <p class="description">Thin crust pizza topped with fresh tomatoes, mozzarella cheese, and basil. A simple but flavorful choice!</p>
+        <a href="/products" class="btn btn-primary">Order Now</a>
+    </div>
+</div>
+
+
+        <!-- Promotions Section -->
+        <div class="promotion">
+            <h4>Upcoming Promotions</h4>
+            <p>Buy 2 Get 1 Free on all pastries! Offer valid this week only.</p>
+        </div>
+
+        <!-- Exciting Offers Section -->
+        <h3>Exciting Offers</h3>
+        <div class="offers">
+            <div class="offer-card">
+                <h4>Happy Hour</h4>
+                <p>Enjoy 50% off on all beverages from 3 PM to 5 PM!</p>
+            </div>
+            <div class="offer-card">
+                <h4>Loyalty Program</h4>
+                <p>Join our loyalty program and get a free dessert on your 5th visit!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Welcome Message -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="welcomeModalLabel">Welcome to QuickBites!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Welcome back! Here are some tips to help you make the most of your dashboard:</p>
+                    <ul>
+                        <li>Check out today's specials for great deals!</li>
+                        <li>Manage your orders and products easily from here.</li>
+                        <li>Don't forget to explore our upcoming promotions!</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

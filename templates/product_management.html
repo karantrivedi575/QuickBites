@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management - QuickBites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5e6cc;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1em;
+            text-align: left;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        td img {
+            width: 80px;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        .price {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        .stock {
+            color: #e74c3c;
+        }
+
+        .category {
+            color: #8e44ad;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .editable {
+            border: 1px dashed #2980b9;
+            padding: 5px;
+        }
+
+        input {
+            width: 100%;
+        }
+
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+        
+        .alert-warning {
+            color: black;
+            background-color: #d2b48c;
+            border-color: #ffeeba;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>Product Management</h1>
+    {% if low_stock_products %}
+    <div class="alert alert-warning">
+        <strong>Low Stock Alert!</strong>
+        <ul>
+            {% for product in low_stock_products %}
+                <li>{{ product.name }} - Stock: {{ product.stock }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+    <table id="productTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Image URL</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr data-product-id="{{ product['id'] }}">
+                <td class="editable">{{ product['id'] }}</td>
+                <td class="editable" contenteditable="false">
+                    <img src="{{ product['url'] }}" alt="{{ product['name'] }}">
+                    <input type="text" value="{{ product['url'] }}" style="display: none;">
+                </td>
+                <td class="editable" contenteditable="false">{{ product['name'] }}</td>
+                <td class="editable" contenteditable="false">{{ product['description'] }}</td>
+                <td class="price editable" contenteditable="false">Rs. {{ product['price'] }}</td>
+                <td class="stock editable" contenteditable="false">{{ product['stock'] }}</td>
+                <td class="category editable" contenteditable="false">{{ product['category'] }}</td>
+                <td>
+                    <button onclick="editRow(this)">Edit</button>
+                    <button onclick="deleteRow(this)">Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <button onclick="addRow()">Add New Product</button>
+
+    <script>
+        let isSaving = false;  // Flag to prevent multiple save actions
+
+function editRow(button) {
+    let row = button.parentNode.parentNode;
+    let editableCells = row.querySelectorAll('.editable');
+
+    editableCells.forEach(cell => {
+        if (cell.contentEditable === "true") {
+            // Save mode: disable editing
+            cell.contentEditable = "false";
+            button.innerHTML = "Edit";
+
+            // If it's the image URL cell, replace input field with image
+            let img = cell.querySelector('img');
+            let input = cell.querySelector('input');
+
+            if (input) {
+                img.src = input.value; // Update image source
+                img.style.display = 'block'; // Show image again
+                input.style.display = 'none'; // Hide input
+            }
+
+            // Send the updated data to the server
+            saveChanges(row);
+        } else {
+            // Edit mode: enable editing
+            cell.contentEditable = "true";
+            button.innerHTML = "Save";
+
+            // If it's the image URL cell, show input field
+            let img = cell.querySelector('img');
+            let input = cell.querySelector('input');
+
+            if (img) {
+                input.value = img.src; // Set the input value to current image src
+                img.style.display = 'none'; // Hide image
+                input.style.display = 'block'; // Show input
+            }
+        }
+    });
+}
+
+function saveChanges(row) {
+    if (isSaving) {
+        return; // Prevent multiple save attempts
+    }
+
+    isSaving = true;  // Set flag to prevent further saves
+
+    let productId = row.getAttribute('data-product-id');
+    let cells = row.querySelectorAll('.editable');
+
+    let updatedProduct = {
+        id: cells[0].innerText,
+        url: cells[1].querySelector('input').value, // Use input value for URL
+        name: cells[2].innerText,
+        description: cells[3].innerText,
+        price: cells[4].innerText.replace('Rs. ', ''),
+        stock: cells[5].innerText,
+        category: cells[6].innerText
+    };
+
+    fetch(`/update_product/${productId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedProduct)
+    })
+    .then(response => response.json())
+    .then(data => {
+        isSaving = false;  // Reset the flag after saving
+        if (data.success) {
+            alert('Product updated successfully.');
+        } else {
+            alert('Failed to save changes.');
+        }
+    })
+    .catch(error => {
+        isSaving = false;  // Reset the flag in case of error
+        console.error('Error saving product:', error);
+    });
+}
+
+function deleteRow(button) {
+    let row = button.parentNode.parentNode;
+    let productId = row.getAttribute('data-product-id');
+
+    // Remove the row from the table
+    row.parentNode.removeChild(row);
+
+    // Send a request to delete the product from the database
+    fetch(`/delete_product/${productId}`, { method: 'POST' });
+}
+
+function addRow() {
+    let table = document.getElementById('productTable').getElementsByTagName('tbody')[0];
+    let newRow = table.insertRow();
+    newRow.setAttribute('data-product-id', 'new'); // Temporarily set a placeholder
+
+    newRow.innerHTML = `
+        <td class="editable" contenteditable="false">New</td>
+        <td class="editable" contenteditable="false">
+            <img src="" alt="Image" style="max-width: 100px; display: block;" class="image-preview">
+            <input type="text" value="" placeholder="Enter image URL" class="url-input" style="display: none;">
+        </td>
+        <td class="editable" contenteditable="false">Product Name</td>
+        <td class="editable" contenteditable="false">Product Description</td>
+        <td class="price editable" contenteditable="false">Rs. 0</td>
+        <td class="stock editable" contenteditable="false">0</td>
+        <td class="category editable" contenteditable="false">Category</td>
+        <td>
+            <button onclick="editRow(this)">Edit</button>
+            <button onclick="deleteRow(this)">Delete</button>
+        </td>
+    `;
+
+    // Set contentEditable to false for all editable cells
+    let editableCells = newRow.querySelectorAll('.editable');
+    editableCells.forEach(cell => {
+        cell.contentEditable = "false"; // Ensure they are not editable
+    });
+
+    // Adding an event listener to update image preview when the input changes
+    const urlInput = newRow.querySelector('.url-input');
+    urlInput.addEventListener('input', function () {
+        const img = newRow.querySelector('.image-preview');
+        img.src = urlInput.value; // Set image src to input value
+
+        // Optional: Handle image loading error
+        img.onerror = function () {
+            img.src = ''; // Reset to empty or set a placeholder
+        };
+    });
+
+    // After adding the row, save the new product to the database
+    let cells = newRow.querySelectorAll('.editable');
+    let newProduct = {
+        url: cells[1].querySelector('input').value, // Get the URL from input field
+        name: cells[2].innerText,
+        description: cells[3].innerText,
+        price: cells[4].innerText.replace('Rs. ', ''),
+        stock: cells[5].innerText,
+        category: cells[6].innerText
+    };
+
+    fetch('/add_product', { // Updated to use the correct backend route
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newProduct)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('New product added successfully.');
+            newRow.setAttribute('data-product-id', data.product_id); // Update row with new product ID from server
+        } else {
+            alert('Failed to add product.');
+            table.deleteRow(-1); // Remove the row if adding fails
+        }
+    })
+    .catch(error => {
+        console.error('Error adding product:', error);
+        table.deleteRow(-1); // Remove the row if there is an error
+    });
+}
+</script>
+</body>
+</html>

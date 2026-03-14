@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queries - QuickBites</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5e6cc; /* Deeper beige background */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #2c3e50; /* Darker color for header */
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        section {
+            background-color: #ffffff; /* White background for sections */
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #3498db; /* Blue for section headers */
+            border-bottom: 3px solid #3498db; /* Underline for section headers */
+            padding-bottom: 10px;
+            font-size: 1.8em;
+        }
+
+        .query-card {
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+            background-color: #f9f9f9; /* Slightly darker background for items */
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .query-card:hover {
+            background-color: #eaeaea; /* Change background on hover */
+            transform: translateY(-3px); /* Slight lift effect on hover */
+        }
+
+        .user-details {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 10px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+            margin-top: 15px;
+        }
+
+        .query-message {
+            margin-top: 10px;
+            font-size: 1.1em;
+            line-height: 1.5em;
+            color: #333;
+            padding: 10px;
+            border-left: 5px solid #3498db; /* Highlight left border */
+            background-color: #ffffff; /* White background for message */
+        }
+
+        /* Reply form styles */
+        .reply-form {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+
+        .reply-form textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .reply-form button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .reply-form button:hover {
+            background-color: #2980b9;
+        }
+
+        /* No queries found styling */
+        p.no-queries {
+            text-align: center;
+            color: #d9534f; /* Bootstrap danger color */
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Support Queries</h1>
+    </header>
+
+    <section id="queries-section">
+        <h2>User Queries</h2>
+
+        <div id="query-list">
+            {% for query in queries %}
+            <div class="query-card">
+                <div class="query-message">{{ query.message }}</div>
+                <div class="user-details">
+                    <strong>User:</strong> {{ query.name }} <br>
+                    <strong>Email:</strong> {{ query.email }} <br>
+                    <strong>Date:</strong> {{ query.created_at }}
+                </div>
+
+                <!-- Reply Section -->
+                <div class="reply-form">
+                    <h3>Reply to User</h3>
+                    <form method="POST" action="{{ url_for('reply_query', query_id=query.id) }}">
+                        <textarea name="reply_message" placeholder="Type your reply here..." required></textarea>
+                        <button type="submit">Send Reply</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <p class="no-queries">No queries found.</p>
+            {% endfor %}
+        </div>
+    </section>
+
+</body>
+</html>

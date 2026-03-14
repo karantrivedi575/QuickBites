@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help - QuickBites</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5e8d0; /* Light beige background */
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #d9b99b; /* Darker beige for header */
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        section {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        h2 {
+            color: #5a4035;
+            font-size: 1.8rem;
+            border-bottom: 2px solid #d9b99b;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* FAQ Section */
+        #faq {
+            margin-bottom: 50px;
+        }
+
+        .faq-item {
+            background-color: #fdf2e9; /* Light beige for FAQ background */
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Slight shadow for depth */
+        }
+
+        .faq-item h3 {
+            color: #5a4035;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .faq-item p {
+            font-size: 1rem;
+            color: #6e574c;
+            line-height: 1.6;
+        }
+
+        /* Contact Form */
+        #contact-form {
+            background-color: #fdf2e9;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #contact-form label {
+            font-size: 1rem;
+            color: #5a4035;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #contact-form input, #contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #d9b99b;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #5a4035;
+            background-color: #fbf7f2;
+        }
+
+        #contact-form button {
+            background-color: #d9b99b; /* Button beige */
+            color: #fff;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #contact-form button:hover {
+            background-color: #b89475; /* Darker beige on hover */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            section {
+                width: 95%;
+            }
+        }
+        #flash-messages {
+            margin: 20px auto;
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #d4edda; /* Light green background */
+            color: #155724; /* Dark green text */
+            border: 1px solid #c3e6cb; /* Green border */
+        }
+        
+        .alert {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Help Section</h1>
+    </header>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div id="flash-messages">
+          {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">
+                  {{ message }}
+              </div>
+          {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+    <section id="faq">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-item">
+            <h3>How do I place an order?</h3>
+            <p>You can place an order by selecting items from the menu and proceeding to checkout.</p>
+        </div>
+        <div class="faq-item">
+            <h3>What payment methods do you accept?</h3>
+            <p>We accept credit cards, debit cards, and mobile payments.</p>
+        </div>
+        <!-- Add more FAQ items as needed -->
+    </section>
+
+    <section id="contact-form">
+        <h2>Contact Support</h2>
+        <form action="/submit-help-query" method="POST">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+    </section>
+</body>
+</html>

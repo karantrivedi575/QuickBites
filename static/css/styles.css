@@ -1,0 +1,13 @@
+.navbar {
+    background-color: #f5f5dc; /* Light beige */
+}
+.navbar-brand, .nav-link {
+    color: #5a5a5a; /* A darker contrasting color */
+}
+.footer {
+    background-color: #f5f5dc;
+    color: #5a5a5a;
+}
+body {
+    background-color: #fffaf0; /* Slight beige background */
+}

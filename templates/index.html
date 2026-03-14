@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickBites - Cafe Management System</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5dc;
+            font-family: 'Lora', serif;
+            color: #5a5a5a;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .navbar {
+            background-color: #d2b48c;
+        }
+        .navbar-brand, .nav-link {
+            color: #ffffff;
+        }
+        .footer {
+            background-color: #d2b48c;
+            color: #ffffff;
+            margin-top: auto;
+        }
+        .footer p {
+            margin: 0;
+            padding: 10px 0;
+        }
+        h2 {
+            color: #8b4513;
+        }
+        p {
+            color: #5a5a5a;
+        }
+        .modal-content {
+            background-color: #fff8e1;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .btn-custom {
+            background-color: #d2b48c;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #b6966c;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .featured-products, .testimonials {
+            margin: 30px 0;
+        }
+        .card {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    {% set category, message = messages[-1] %}
+    <div class="container mt-2">
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
+{% endif %}
+{% endwith %}
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <a class="navbar-brand" href="#">QuickBites</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#loginModal">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#signupModal">Signup</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <div class="container main-content mt-5">
+        <h2>Welcome to QuickBites</h2>
+        <p>Manage your cafe efficiently by tracking orders, inventory, staff schedules, and analytics.</p>
+        
+        <!-- Featured Products Section -->
+        <div class="featured-products">
+            <h3>Featured Products</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://shorturl.at/6oOIc" class="card-img-top" alt="Product 1">
+                        <div class="card-body">
+                            <h5 class="card-title">Cappuccino</h5>
+                            <p class="card-text">Rich espresso with steamed milk and a velvety foam..</p>
+                            <a href="#" class="btn btn-custom">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://shorturl.at/YtAuZ" class="card-img-top" alt="Product 2">
+                        <div class="card-body">
+                            <h5 class="card-title">Cheesecake</h5>
+                            <p class="card-text">Rich and creamy with a buttery graham cracker crust, our cheesecake is a decadent dessert topped with your choice of fresh fruit or chocolate drizzle!</p>
+                            <a href="#" class="btn btn-custom">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="https://shorturl.at/2T92M" class="card-img-top" alt="Product 3">
+                        <div class="card-body">
+                            <h5 class="card-title">Fresh Salad</h5>
+                            <p class="card-text">A vibrant mix of crisp greens, seasonal vegetables, and a zesty dressing, our fresh salad is a healthy and refreshing choice for any meal!</p>
+                            <a href="#" class="btn btn-custom">Order Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section -->
+        <div class="about mt-5">
+            <h3>About QuickBites</h3>
+            <p>At QuickBites, we believe in providing delicious food with an efficient service. Our café is designed to create a cozy atmosphere for our customers, allowing them to enjoy their meals while keeping track of orders and inventory seamlessly.</p>
+        </div>
+    </div>
+
+
+        <!-- Customer Testimonials Section -->
+        <div class="testimonials">
+            <h3>Customer Testimonials</h3>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>John Doe:</strong> "QuickBites transformed how I manage my café! The interface is intuitive and the service is excellent."</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Jane Smith:</strong> "The featured products are always top-notch! I love their cappuccino!"</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer text-center">
+        <div class="container">
+            <p>&copy; 2024 QuickBites. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login to QuickBites</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox" id="showPasswordLogin" onclick="togglePasswordVisibility('password', null, 'showPasswordLogin')">
+                            <label for="showPasswordLogin">Show Password</label>
+                        </div>
+                        <button type="submit" class="btn btn-custom btn-block">Login</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" data-toggle="modal" data-target="#forgetPasswordModal" class="text-primary">Forgot Password?</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal fade" id="forgetPasswordModal" tabindex="-1" role="dialog" aria-labelledby="forgetPasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="forgetPasswordModalLabel">Reset Your Password</h5>
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/forgot-password" method="POST">
+                        <div class="form-group">
+                            <label for="resetEmail">Email address</label>
+                            <input type="email" class="form-control" id="resetEmail" name="email" required>
+                        </div>
+                        <button type="submit" class="btn btn-custom btn-block">Send Reset Link</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+     <!-- Signup Modal -->
+     <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signupModalLabel">Sign up for QuickBites</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="signupForm" action="/signup" method="POST">
+                        <div class="form-group">
+                            <label for="signupName">Full Name</label>
+                            <input type="text" class="form-control" id="signupName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPhone">Phone Number</label>
+                            <input type="text" class="form-control" id="signupPhone" name="phone_no" 
+                                   required maxlength="10" pattern="\d{10}" 
+                                   title="Please enter a valid 10-digit phone number containing only numbers">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="signupEmail">Email address</label>
+                            <input type="email" class="form-control" id="signupEmail" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input type="password" class="form-control" id="signupPassword" name="password" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <label for="signupConfirmPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="signupConfirmPassword" name="confirm_password" required>
+                        </div>
+                    
+                        <div class="form-group">
+                            <input type="checkbox" id="showPassword" onclick="togglePasswordVisibility('signupPassword', 'signupConfirmPassword', 'showPassword')">
+<label for="showPassword">Show Password</label>
+
+                        </div>
+                    
+                       
+                        <button type="submit" class="btn btn-custom btn-block">Sign Up</button>
+                    </form>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility(passwordId, confirmPasswordId, checkboxId) {
+            const passwordInput = document.getElementById(passwordId);
+            const confirmPasswordInput = confirmPasswordId ? document.getElementById(confirmPasswordId) : null;
+            const isChecked = document.getElementById(checkboxId).checked;
+    
+            // Toggle the type of the input fields based on the checkbox state
+            if (isChecked) {
+                passwordInput.type = 'text'; // Show password
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.type = 'text'; // Show confirm password
+                }
+            } else {
+                passwordInput.type = 'password'; // Hide password
+                if (confirmPasswordInput) {
+                    confirmPasswordInput.type = 'password'; // Hide confirm password
+                }
+            }
+        }
+        
+        // Form submission validation
+        document.getElementById('signupForm').addEventListener('submit', function(event) {
+            const passwordInput = document.getElementById('signupPassword');
+            const confirmPasswordInput = document.getElementById('signupConfirmPassword');
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+        
+            // Check if the passwords match
+            if (password !== confirmPassword) {
+                event.preventDefault(); // Prevent form submission
+                alert("Passwords do not match!");
+            }
+        });
+        </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
