@@ -4,14 +4,18 @@ from flask import g
 # Database configuration
 import os
 
+# This helper handles empty strings or missing variables gracefully
+def get_env_int(key, default):
+    value = os.getenv(key)
+    return int(value) if value and value.strip() else default
+
 db_config = {
     'host': os.getenv('MYSQLHOST', 'localhost'),
     'user': os.getenv('MYSQLUSER', 'root'),
     'password': os.getenv('MYSQLPASSWORD', 'admin'),
     'database': os.getenv('MYSQLDATABASE', 'cafe'),
-    'port': int(os.getenv('MYSQLPORT', 3306))
+    'port': get_env_int('MYSQLPORT', 3306)
 }
-
 def get_db():
     """Get a database connection. Create it if it's not already connected."""
     if 'db' not in g:
